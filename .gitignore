@@ -30,3 +30,7 @@
 *.exe
 *.out
 *.app
+/PrintTest/PrintTest/x64/Release
+/PrintTest/x64/Release
+/.vs
+/PrintTest/.vs/PrintTest/v16
