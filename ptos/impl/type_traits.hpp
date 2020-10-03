@@ -10,10 +10,25 @@ namespace ptos
 	namespace type_traits
 	{
 #pragma region is_range
-		template<class T>auto is_range_i(T const& v)
-			->decltype(++std::begin(v), std::begin(v) != std::end(v), *std::begin(v), std::true_type());
-		std::false_type is_range_i(...);
-		template<class T>struct is_range :decltype(is_range_i(std::declval<T>()))
+		namespace impl
+		{
+			template<class T>auto has_iterator(T const& v)
+				->decltype(std::begin(v), std::end(v), std::true_type());
+			std::false_type has_iterator(...);
+
+			template<class T, class U>auto are_iterators_i(T v, U u)
+				->decltype(++v, v != u, *v, std::true_type());
+			std::false_type are_iterator_i(...);
+
+			template<class T, class U>struct are_iterator
+				: decltype(are_iterators_i(std::declval<T>(), std::declval<U>())){};
+
+			template<class T,class = decltype(has_iterator(std::declval<T>()))>struct is_range_i
+				: std::false_type{};
+			template<class T>struct is_range_i<T, std::true_type>
+				: decltype(are_iterators_i(std::begin(std::declval<T>()), std::end(std::declval<T>()))){};
+		}
+		template<class T>struct is_range :impl::is_range_i<T>
 		{
 
 		};

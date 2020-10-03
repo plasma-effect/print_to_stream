@@ -1,5 +1,7 @@
 #pragma once
 #include"ptos/impl/type_traits.hpp"
+#include<string>
+#include<ostream>
 
 namespace ptos
 {
@@ -8,6 +10,14 @@ namespace ptos
 		template<class Stream, class T, std::size_t... Is>void write_tuple(Stream&, T const&, std::index_sequence<Is...>);
 		template<class Stream, class T>void write_iterate(Stream&, T const& rng, char manip);
 
+		template<class Stream>void write(Stream& stream, char const* str)
+		{
+			stream << str;
+		}
+		template<class Stream>void write(Stream& stream, wchar_t const* str)
+		{
+			stream << str;
+		}
 		template<class Stream, class T>void write(Stream& stream, T const& v)
 		{
 			if constexpr (std::is_same_v<T, std::string>)
